@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista de Raças de Cachorros By Meirex</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Honk&display=swap" rel="stylesheet">
+  <style>
+
+
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    h1{
+        text-align: center;
+       
+        margin-top: -50px;
+    }
+
+    #breeds-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 100px;
+    }
+
+    .breed-button {
+      background-color: #000000;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      margin: 10px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    .breed-images {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .dog-image {
+      width: 200px;
+      height: 200px;
+      object-fit: cover;
+      margin: 10px;
+      border-radius: 5px;
+    }
+
+    #error-message {
+      color: #e74c3c;
+      text-align: center;
+      width: 100%;
+    }
+
+
+  </style>
+</head>
+<body>
+    <h1 id="h1quevaisumir">Clique em uma das raças de cachorros</h1>
+
+<div id="breeds-container"></div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const breedsContainer = document.getElementById('breeds-container');
+    const errorMessage = document.getElementById('error-message');
+
+ 
+    fetch('https://dog.ceo/api/breeds/list/all')
+      .then(response => response.json())
+      .then(data => {
+        const breeds = Object.keys(data.message);
+        displayBreeds(breeds);
+      })
+      .catch(error => {
+        errorMessage.textContent = 'Erro ao obter a lista de raças.';
+      });
+
+
+    function displayBreeds(breeds) {
+      breeds.forEach(breed => {
+        const breedButton = document.createElement('button');
+        breedButton.classList.add('breed-button');
+        breedButton.textContent = breed;
+        breedButton.addEventListener('click', () => getBreedImages(breed));
+        breedsContainer.appendChild(breedButton);
+      });
+    }
+
+
+    function getBreedImages(breed) {
+      const breedImagesContainer = document.createElement('div');
+      breedImagesContainer.classList.add('breed-images');
+      breedsContainer.innerHTML = '';
+      breedsContainer.appendChild(breedImagesContainer);
+
+      fetch(`https://dog.ceo/api/breed/${breed}/images/random/4`)
+        .then(response => response.json())
+        .then(data => {
+          const breedImages = data.message;
+          displayBreedImages(breedImages, breedImagesContainer);
+        })
+        .catch(error => {
+          errorMessage.textContent = 'Erro ao obter imagens da raça.';
+        });
+        h1sumir()
+    }
+
+     
+      function h1sumir() {
+      h1quevaisumir.style.display = 'none';
+    }
+
+    
+  
+    function displayBreedImages(images, container) {
+      images.forEach(imageUrl => {
+        const dogImage = document.createElement('img');
+        dogImage.classList.add('dog-image');
+        dogImage.src = imageUrl;
+        container.appendChild(dogImage);
+       
+      });
+    }
+  });
+</script>
+
+</body>
+</html>
